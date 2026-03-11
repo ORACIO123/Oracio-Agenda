@@ -91,9 +91,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--navy);
 .tag{font-size:.67rem;padding:.13rem .45rem;border-radius:20px;font-weight:500}
 .tag-p{background:rgba(46,204,113,.12);color:#27ae60}
 .tag-d{background:rgba(77,179,230,.12);color:#2980b9}
+.tag-t{background:rgba(155,89,182,.12);color:#8e44ad}
 
 /* MODE */
-.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.mode-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem}
 .mode-card{border:2px solid var(--gray-200);border-radius:var(--radius);padding:1.4rem;cursor:pointer;transition:all .2s;text-align:center}
 .mode-card:hover{border-color:var(--sky)}.mode-card.selected{border-color:var(--sky);background:rgba(77,179,230,.05)}
 .mode-icon{font-size:2rem;margin-bottom:.6rem}
@@ -203,6 +204,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--navy);
 /* SM Calendar */
 .sm-cal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem}
 .sm-month{font-weight:600;color:var(--navy);font-size:.95rem}
+.sm-view-toggle{display:flex;gap:.25rem;background:var(--gray-100);padding:.2rem;border-radius:8px}
+.sm-view-btn{padding:.3rem .7rem;border:none;border-radius:6px;font-size:.72rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--gray-400);background:transparent;transition:all .2s}
+.sm-view-btn.active{background:white;color:var(--navy);box-shadow:var(--shadow-sm)}
 .sm-cal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:1.3rem}
 .sm-dh{text-align:center;font-size:.65rem;color:var(--gray-400);font-weight:600;padding:.22rem 0;text-transform:uppercase}
 .sm-day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:7px;cursor:pointer;transition:all .17s;font-size:.78rem;font-weight:500;border:2px solid transparent;gap:2px}
@@ -213,6 +217,20 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--navy);
 .sm-day.selected{background:var(--sky)!important;border-color:var(--sky)!important;color:white!important}
 .sm-dot{width:4px;height:4px;border-radius:50%;background:var(--sky)}
 .sm-day.selected .sm-dot{background:white}
+
+/* Week view */
+.sm-week{display:none;margin-bottom:1.3rem}
+.sm-week.active{display:block}
+.sm-week-grid{display:grid;grid-template-columns:48px repeat(7,1fr);gap:0;border:1px solid var(--gray-200);border-radius:10px;overflow:hidden;font-size:.72rem}
+.sm-week-hdr{background:var(--navy);color:white;font-weight:700;font-size:.65rem;text-align:center;padding:.5rem .2rem;text-transform:uppercase;letter-spacing:.03em}
+.sm-week-hdr.today-col{background:var(--sky)}
+.sm-week-hcorner{background:var(--navy-deep);color:var(--sky-light);font-size:.6rem;display:flex;align-items:center;justify-content:center;padding:.3rem}
+.sm-week-hour{background:var(--gray-100);color:var(--gray-400);font-weight:600;font-size:.65rem;padding:.2rem .3rem;display:flex;align-items:flex-start;justify-content:flex-end;border-bottom:1px solid var(--gray-200);border-right:1px solid var(--gray-200);min-height:38px}
+.sm-week-cell{border-bottom:1px solid var(--gray-200);border-right:1px solid var(--gray-200);min-height:38px;padding:1px;position:relative;cursor:pointer;transition:background .15s}
+.sm-week-cell:hover{background:rgba(77,179,230,.04)}
+.sm-week-cell.today-col{background:rgba(77,179,230,.03)}
+.sm-week-pill{display:block;padding:2px 5px;border-radius:4px;font-size:.6rem;font-weight:600;margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4;cursor:default}
+.sm-week-pill.booked{opacity:.7;text-decoration:line-through}
 
 /* Slot editor */
 .slot-ed{background:var(--gray-100);border-radius:var(--radius);padding:1.1rem}
@@ -247,6 +265,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--navy);
 .appt-badge{font-size:.68rem;padding:.2rem .6rem;border-radius:20px;font-weight:600}
 .badge-p{background:rgba(46,204,113,.12);color:#27ae60}
 .badge-d{background:rgba(77,179,230,.12);color:#2980b9}
+.badge-t{background:rgba(155,89,182,.12);color:#8e44ad}
 .btn-del{background:rgba(231,76,60,.1);border:none;color:var(--error);padding:.32rem .65rem;border-radius:6px;font-size:.76rem;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
 /* PENDING / APPROVAL */
 .pending-card{background:white;border:2px solid #f39c12;border-radius:var(--radius);padding:1rem 1.3rem;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap;transition:box-shadow .2s;position:relative}
@@ -415,6 +434,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--navy);
   <div class="admin-tabs">
     <button class="admin-tab active" onclick="aTab('slots')">🕐 Gérer les créneaux</button>
     <button class="admin-tab" onclick="aTab('pending')" id="pendingTabBtn" style="position:relative">📬 Demandes<span id="pendingBadge" style="display:none" class="pending-notif">0</span></button>
+    <button class="admin-tab" onclick="aTab('rooms')">🚪 Salles</button>
     <button class="admin-tab" onclick="aTab('calendar')">📅 Calendrier</button>
     <button class="admin-tab" onclick="aTab('list')">📋 Liste des RDV</button>
     <button class="admin-tab" onclick="aTab('settings')">⚙️ Services & Équipe</button>
@@ -437,11 +457,22 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--navy);
 
         <div id="smContent" style="display:none">
           <div class="sm-cal-hdr">
-            <button class="cal-nav" onclick="smChMonth(-1)">‹</button>
-            <div class="sm-month" id="smMonthLbl"></div>
-            <button class="cal-nav" onclick="smChMonth(1)">›</button>
+            <div style="display:flex;align-items:center;gap:.6rem">
+              <button class="cal-nav" onclick="smNav(-1)">‹</button>
+              <div class="sm-month" id="smMonthLbl"></div>
+              <button class="cal-nav" onclick="smNav(1)">›</button>
+            </div>
+            <div class="sm-view-toggle">
+              <button class="sm-view-btn active" id="smViewMonth" onclick="smSetView('month')">Mois</button>
+              <button class="sm-view-btn" id="smViewWeek" onclick="smSetView('week')">Semaine</button>
+            </div>
           </div>
-          <div class="sm-cal-g" id="smCalG"></div>
+          <div id="smMonthView">
+            <div class="sm-cal-g" id="smCalG"></div>
+          </div>
+          <div class="sm-week" id="smWeekView">
+            <div id="smWeekGrid"></div>
+          </div>
 
           <div class="slot-ed" id="slotEd" style="display:none">
             <div class="slot-ed-title">
@@ -462,7 +493,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--navy);
 
         <div id="smEmptyMsg" style="text-align:center;padding:2rem;color:var(--gray-400)">
           <div style="font-size:2rem;margin-bottom:.5rem">👆</div>
-          Sélectionnez un collaborateur et un service pour commencer
+          Sélectionnez un collaborateur pour voir son planning.<br>
+          <span style="font-size:.82rem">Choisissez ensuite un service pour ajouter ou modifier des créneaux.</span>
         </div>
       </div>
     </div>
@@ -480,6 +512,22 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--navy);
       </select>
     </div>
     <div id="pendingList"></div>
+  </div>
+
+  <!-- TAB SALLES -->
+  <div class="atc" id="atRooms">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.7rem">
+      <div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:var(--navy)">🚪 Disponibilité des salles</div>
+        <div style="font-size:.82rem;color:var(--gray-400);margin-top:.2rem">Vue semaine — repérez les trous dans l'occupation de chaque salle</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.5rem">
+        <button class="cal-nav" onclick="roomsNav(-1)">‹</button>
+        <div id="roomsWeekLbl" style="font-weight:600;color:var(--navy);font-size:.88rem;min-width:180px;text-align:center"></div>
+        <button class="cal-nav" onclick="roomsNav(1)">›</button>
+      </div>
+    </div>
+    <div id="roomsGridWrap" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem"></div>
   </div>
 
   <!-- TAB CALENDRIER -->
@@ -514,6 +562,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--navy);
       <h3>Équipe</h3>
       <div id="setCollabs"></div>
       <button class="btn-next" onclick="openClModal()" style="margin-top:.9rem;padding:.5rem 1rem;font-size:.81rem">+ Ajouter un collaborateur</button>
+    </div>
+    <div class="ss">
+      <h3>🚪 Salles de réunion</h3>
+      <div style="font-size:.82rem;color:var(--gray-400);margin-bottom:.9rem">Chaque RDV accepté est attribué à une salle. Si toutes les salles sont occupées, le créneau ne pourra pas être validé.</div>
+      <div id="setRooms"></div>
+      <button class="btn-next" onclick="openRoomModal()" style="margin-top:.9rem;padding:.5rem 1rem;font-size:.81rem">+ Ajouter une salle</button>
     </div>
     <div class="ss">
       <h3>Configuration E-mail (EmailJS)</h3>
@@ -559,6 +613,7 @@ let services=[{id:'s1',name:'Budget fiscal',icon:'📊',duration:60,modes:['pres
 let collabs=[];
 let availSlots={};   // { "collabId__serviceId__YYYY-MM-DD": ["09:00","10:00",...] }
 let allAppts={};
+let rooms=[{id:'r1',name:'Salle 1',desc:''},{id:'r2',name:'Salle 2',desc:''},{id:'r3',name:'Salle 3',desc:''}];
 let isAdmin=false;
 
 // Booking state
@@ -580,6 +635,7 @@ function loadAll(){
       const c=snap.val(); if(!c)return;
       if(c.services)services=c.services;
       if(c.collabs)collabs=c.collabs;
+      if(c.rooms)rooms=c.rooms;
       renderSvcs();
       if(isAdmin){popSmSels();renderSetAll();}
     });
@@ -592,7 +648,7 @@ function loadAll(){
         if(bk.date) renderClientSlots(bk.date);
       }
       if(isAdmin&&smSelDate)renderSmDay(smSelDate);
-      if(isAdmin)renderSmCal();
+      if(isAdmin){if(smView==='week')renderSmWeek();else renderSmCal();}
     });
     window._fbOnValue(window._fbRef(window._db,'appointments'),snap=>{
       allAppts=snap.val()||{};
@@ -601,14 +657,17 @@ function loadAll(){
         renderCCal();
         if(bk.date) renderClientSlots(bk.date);
       }
-      if(isAdmin){renderACal();renderList();updStats();updPendingBadge();
+      if(isAdmin){
+        renderACal();renderList();updStats();updPendingBadge();
+        if(smView==='week')renderSmWeek();else renderSmCal();
+        if(smSelDate)renderSmDay(smSelDate);
         const pt=document.getElementById('atPending');
         if(pt&&pt.classList.contains('active'))renderPending();}
     });
   });
 }
 
-function saveCfg(){wFB(()=>window._fbSet(window._fbRef(window._db,'config'),{services,collabs}));}
+function saveCfg(){wFB(()=>window._fbSet(window._fbRef(window._db,'config'),{services,collabs,rooms}));}
 function slotKey(ci,si,d){return `${ci}__${si}__${d}`;}
 function getSlots(key){return availSlots[key]||[];}
 function saveSlots(key,arr){wFB(()=>{const r=window._fbRef(window._db,`slots/${key}`);arr.length===0?window._fbRemove(r):window._fbSet(r,arr);});}
@@ -639,7 +698,7 @@ document.getElementById('loginModal').addEventListener('click',e=>{if(e.target==
 //  VIEWS
 // ══════════════════════════════════════════════════════
 function showView(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(id).classList.add('active');}
-function goHome(){if(isAdmin)showAdmin();else showView('bookingView');}
+function goHome(){showView('bookingView');resetBk();}
 function showAdmin(){
   showView('adminPanel');
   aCalMonth=new Date(TODAY.getFullYear(),TODAY.getMonth(),1);
@@ -676,9 +735,11 @@ function renderSvcs(){
   const fbLoaded = window._firebaseReady && (collabs.length>0 || Object.keys(availSlots).length>0);
 
   list.forEach(s=>{
-    const modes=(s.modes||[]).map(m=>
-      '<span class="tag tag-'+(m==='presentiel'?'p':'d')+'">'+(m==='presentiel'?'🏢 Présentiel':'💻 Distanciel')+'</span>'
-    ).join('');
+    const modes=(s.modes||[]).map(m=>{
+      if(m==='presentiel') return '<span class="tag tag-p">🏢 Présentiel</span>';
+      if(m==='telephonique') return '<span class="tag tag-t">📞 Téléphonique</span>';
+      return '<span class="tag tag-d">💻 Distanciel</span>';
+    }).join('');
 
     let isSelectable, noSlotMsg='';
 
@@ -695,8 +756,8 @@ function renderSvcs(){
           if(!k.startsWith(c.id+'__'+s.id+'__')) return false;
           const dk=k.split('__')[2];
           if(dk<fmt(TODAY)) return false;
-          const booked=getBookedTimes(c.id,s.id,dk);
-          const avail=(availSlots[k]||[]).filter(t=>!booked.includes(t));
+          const dur=s.duration||60;
+          const avail=(availSlots[k]||[]).filter(t=>!isCollabBusyAt(c.id,dk,t,dur));
           return avail.length>0;
         });
       });
@@ -734,9 +795,10 @@ function renderSvcs(){
 function renderModes(){
   const g=document.getElementById('modeGrid'); g.innerHTML='';
   (bk.svc?.modes||[]).forEach(m=>{
-    const ip=m==='presentiel';
+    const cfg={presentiel:{icon:'🏢',name:'Présentiel',desc:'Leuvensesteenweg 555, Zaventem'},distanciel:{icon:'💻',name:'Distanciel',desc:'Réunion en ligne (Teams / Zoom)'},telephonique:{icon:'📞',name:'Téléphonique',desc:'Appel téléphonique'}};
+    const c=cfg[m]||cfg.distanciel;
     const d=document.createElement('div'); d.className='mode-card'+(bk.mode===m?' selected':'');
-    d.innerHTML=`<div class="mode-icon">${ip?'🏢':'💻'}</div><div class="mode-name">${ip?'Présentiel':'Distanciel'}</div><div class="mode-desc">${ip?'Leuvensesteenweg 555, Zaventem':'Réunion en ligne (Teams / Zoom)'}</div>`;
+    d.innerHTML=`<div class="mode-icon">${c.icon}</div><div class="mode-name">${c.name}</div><div class="mode-desc">${c.desc}</div>`;
     d.onclick=()=>{document.querySelectorAll('.mode-card').forEach(c=>c.classList.remove('selected'));d.classList.add('selected');bk.mode=m;document.getElementById('n2').disabled=false;};
     g.appendChild(d);
   });
@@ -771,8 +833,10 @@ function renderCollabs(){
     );
     const total=futureDates.reduce((acc,k)=>{
       const dk=k.split('__')[2];
-      const booked=getBookedTimes(c.id, bk.svc.id, dk);
-      const avail=(availSlots[k]||[]).filter(t=>!booked.includes(t));
+      const dur=bk.svc?.duration||60;
+      let avail=(availSlots[k]||[]).filter(t=>!isCollabBusyAt(c.id, dk, t, dur));
+      // Vérifier la dispo des salles (nécessaire quel que soit le mode)
+      avail=avail.filter(t=>isRoomAvailableForSlot(bk.svc.id, dk, t));
       return acc+avail.length;
     }, 0);
     const has=total>0;
@@ -810,8 +874,10 @@ function renderCCal(){
     if(date<TODAY)el.classList.add('past');
     else{
       const k=slotKey(bk.collab.id,bk.svc.id,dk);
-      const booked=getBookedTimes(bk.collab.id,bk.svc.id,dk);
-      const avail=getSlots(k).filter(t=>!booked.includes(t));
+      const dur=bk.svc?.duration||60;
+      let avail=getSlots(k).filter(t=>!isCollabBusyAt(bk.collab.id, dk, t, dur));
+      // Vérifier la dispo des salles (nécessaire quel que soit le mode)
+      avail=avail.filter(t=>isRoomAvailableForSlot(bk.svc.id, dk, t));
       if(avail.length>0)el.classList.add('has-s'); else el.classList.add('no-s');
       if(date.toDateString()===TODAY.toDateString())el.classList.add('today');
       if(bk.date===dk)el.classList.add('selected');
@@ -834,8 +900,17 @@ function selDate(dk,dateObj,el){
 function renderClientSlots(dk){
   const g=document.getElementById('slotsG'); g.innerHTML='';
   const k=slotKey(bk.collab.id,bk.svc.id,dk);
-  const booked=getBookedTimes(bk.collab.id,bk.svc.id,dk);
-  const avail=getSlots(k).filter(t=>!booked.includes(t)).sort();
+  const dur=bk.svc?.duration||60;
+  let avail=getSlots(k).filter(t=>!isCollabBusyAt(bk.collab.id, dk, t, dur)).sort();
+
+  // Vérifier la dispo des salles (nécessaire quel que soit le mode)
+  avail=avail.filter(t=>isRoomAvailableForSlot(bk.svc.id, dk, t));
+
+  if(avail.length===0){
+    g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:1rem;color:var(--gray-400);font-size:.84rem">Aucun créneau disponible pour cette date</div>';
+    return;
+  }
+
   avail.forEach(time=>{
     const btn=document.createElement('button');
     btn.className='slot-btn'+(bk.time===time?' selected':'');
@@ -845,8 +920,79 @@ function renderClientSlots(dk){
   });
 }
 
-function getBookedTimes(ci,si,dk){
-  return Object.values(allAppts).filter(a=>a.collabId===ci&&a.serviceId===si&&a.date===dk&&a.status!=='refused').map(a=>a.time);
+// Vérifie si un créneau CHEVAUCHE un RDV existant du collaborateur
+// Prend en compte la durée des RDV existants ET du service qu'on veut réserver
+function isCollabBusyAt(ci, dk, time, duration){
+  const [h,m]=time.split(':').map(Number);
+  const slotStart=h*60+m;
+  const slotEnd=slotStart+(duration||60);
+
+  return Object.values(allAppts).some(a=>{
+    if(a.collabId!==ci || a.date!==dk || a.status==='refused') return false;
+    const [ah,am]=a.time.split(':').map(Number);
+    const aStart=ah*60+am;
+    const aEnd=aStart+(a.duration||60);
+    // Chevauchement : les deux plages se croisent
+    return aStart<slotEnd && aEnd>slotStart;
+  });
+}
+
+// Vérifie si un créneau a au moins une salle compatible disponible
+// Les RDV pending SANS salle attribuée réservent virtuellement une salle compatible
+function isRoomAvailableForSlot(si, dk, time){
+  const svc=services.find(s=>s.id===si);
+  if(!svc) return true;
+  const dur=svc.duration||60;
+
+  // Salles compatibles avec ce service
+  const compatibleRooms=rooms.filter(r=>{
+    if((r.allowedServices||[]).length===0) return true;
+    return r.allowedServices.includes(si);
+  });
+
+  // Si aucune salle configurée, on ne filtre pas
+  if(rooms.length===0 || compatibleRooms.length===0) return true;
+
+  const [h,m]=time.split(':').map(Number);
+  const startMin=h*60+m;
+  const endMin=startMin+dur;
+
+  // Tous les RDV ce jour-là (non refusés) qui chevauchent ce créneau
+  const overlappingRdvs=Object.values(allAppts).filter(a=>{
+    if(a.date!==dk || a.status==='refused') return false;
+    const [ah,am]=a.time.split(':').map(Number);
+    const aStart=ah*60+am;
+    const aEnd=aStart+(a.duration||60);
+    return aStart<endMin && aEnd>startMin;
+  });
+
+  // Simuler l'attribution des salles :
+  // 1) Les RDV avec roomId occupent leur salle
+  // 2) Les RDV pending sans roomId "réservent" la première salle compatible libre
+  // On clone la liste des salles dispo pour simuler
+  const roomBusy=new Set(); // Set des room IDs occupés
+
+  // D'abord, marquer les salles déjà attribuées
+  overlappingRdvs.filter(a=>a.roomId).forEach(a=>{
+    roomBusy.add(a.roomId);
+  });
+
+  // Ensuite, pour chaque RDV sans salle, réserver virtuellement une salle compatible
+  overlappingRdvs.filter(a=>!a.roomId).forEach(a=>{
+    // Salles compatibles avec le service de CE rdv
+    const rdvCompatible=rooms.filter(r=>{
+      if(roomBusy.has(r.id)) return false;
+      if((r.allowedServices||[]).length===0) return true;
+      return r.allowedServices.includes(a.serviceId);
+    });
+    if(rdvCompatible.length>0){
+      // Réserver la première salle compatible libre
+      roomBusy.add(rdvCompatible[0].id);
+    }
+  });
+
+  // Vérifier s'il reste au moins une salle compatible libre pour notre créneau
+  return compatibleRooms.some(r=>!roomBusy.has(r.id));
 }
 
 function renderSum(){
@@ -854,7 +1000,7 @@ function renderSum(){
   const ds=d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   document.getElementById('sumCard').innerHTML=`
     <div class="sum-row"><span class="sum-l">Service</span><span class="sum-v">${bk.svc?.name}</span></div>
-    <div class="sum-row"><span class="sum-l">Mode</span><span class="sum-v">${bk.mode==='presentiel'?'🏢 Présentiel':'💻 Distanciel'}</span></div>
+    <div class="sum-row"><span class="sum-l">Mode</span><span class="sum-v">${modeInfo(bk.mode).icon} ${modeInfo(bk.mode).label}</span></div>
     <div class="sum-row"><span class="sum-l">Collaborateur</span><span class="sum-v">${bk.collab?.name}</span></div>
     <div class="sum-row"><span class="sum-l">Date</span><span class="sum-v">${ds}</span></div>
     <div class="sum-row"><span class="sum-l">Heure</span><span class="sum-v">${bk.time}</span></div>
@@ -872,12 +1018,22 @@ async function doBook(){
   const btn=document.getElementById('confirmBtn');
   btn.disabled=true; btn.innerHTML='<span class="loader"></span>';
 
-  // ── Vérifier que le créneau n'a pas été pris entre-temps
-  const alreadyBooked = getBookedTimes(bk.collab.id, bk.svc.id, bk.date);
-  if(alreadyBooked.includes(bk.time)){
+  // ── Vérifier que le créneau n'a pas été pris entre-temps (chevauchement durée)
+  if(isCollabBusyAt(bk.collab.id, bk.date, bk.time, bk.svc?.duration||60)){
     showNotif('Ce créneau vient d\'être réservé. Choisissez un autre horaire.','error');
     btn.disabled=false; btn.innerHTML='✓ Confirmer le rendez-vous';
-    // Rafraîchir les créneaux pour montrer le changement
+    renderCCal();
+    renderClientSlots(bk.date);
+    bk.time=null;
+    document.getElementById('n3').disabled=true;
+    cStep(3);
+    return;
+  }
+
+  // ── Vérifier la dispo des salles (nécessaire quel que soit le mode)
+  if(!isRoomAvailableForSlot(bk.svc.id, bk.date, bk.time)){
+    showNotif('Plus aucune salle disponible pour ce créneau. Choisissez un autre horaire.','error');
+    btn.disabled=false; btn.innerHTML='✓ Confirmer le rendez-vous';
     renderCCal();
     renderClientSlots(bk.date);
     bk.time=null;
@@ -967,14 +1123,331 @@ function popSmSels(){
 }
 
 function smRefresh(){
-  const ci=document.getElementById('smC').value,si=document.getElementById('smS').value;
-  const ok=ci&&si;
-  document.getElementById('smContent').style.display=ok?'block':'none';
-  document.getElementById('smEmptyMsg').style.display=ok?'none':'block';
-  if(ok){smSelDate=null;renderSmCal();document.getElementById('slotEd').style.display='none';document.getElementById('smNoDayMsg').style.display='block';}
+  const ci=document.getElementById('smC').value;
+  const showCal=!!ci;
+  document.getElementById('smContent').style.display=showCal?'block':'none';
+  document.getElementById('smEmptyMsg').style.display=showCal?'none':'block';
+  if(showCal){
+    smSelDate=null;
+    if(smView==='week') renderSmWeek(); else renderSmCal();
+    smUpdateLabel();
+    document.getElementById('slotEd').style.display='none';
+    document.getElementById('smNoDayMsg').style.display='block';
+  }
 }
 
-function smChMonth(d){smCalMonth.setMonth(smCalMonth.getMonth()+d);renderSmCal();}
+let smView='month'; // 'month' or 'week'
+let smWeekStart=null; // Date du lundi de la semaine affichée
+
+function smSetView(v){
+  smView=v;
+  document.getElementById('smViewMonth').classList.toggle('active',v==='month');
+  document.getElementById('smViewWeek').classList.toggle('active',v==='week');
+  document.getElementById('smMonthView').style.display=v==='month'?'block':'none';
+  document.getElementById('smWeekView').classList.toggle('active',v==='week');
+  if(v==='week'){
+    // Initialiser la semaine à la semaine courante
+    if(!smWeekStart){
+      const now=new Date();
+      const day=now.getDay(); const diff=(day+6)%7;
+      smWeekStart=new Date(now.getFullYear(),now.getMonth(),now.getDate()-diff);
+    }
+    renderSmWeek();
+  } else {
+    renderSmCal();
+  }
+  smUpdateLabel();
+}
+
+function smNav(dir){
+  if(smView==='month'){
+    smCalMonth.setMonth(smCalMonth.getMonth()+dir);
+    renderSmCal();
+  } else {
+    smWeekStart=new Date(smWeekStart.getFullYear(),smWeekStart.getMonth(),smWeekStart.getDate()+dir*7);
+    renderSmWeek();
+  }
+  smUpdateLabel();
+}
+
+function smUpdateLabel(){
+  const lbl=document.getElementById('smMonthLbl');
+  if(smView==='month'){
+    lbl.textContent=smCalMonth.toLocaleDateString('fr-FR',{month:'long',year:'numeric'});
+  } else if(smWeekStart){
+    const end=new Date(smWeekStart); end.setDate(end.getDate()+6);
+    const opts={day:'numeric',month:'short'};
+    lbl.textContent=smWeekStart.toLocaleDateString('fr-FR',opts)+' — '+end.toLocaleDateString('fr-FR',{...opts,year:'numeric'});
+  }
+}
+
+function smChMonth(d){smNav(d);}
+
+function renderSmWeek(){
+  const ci=document.getElementById('smC').value;
+  if(!ci||!smWeekStart)return;
+  const grid=document.getElementById('smWeekGrid');
+
+  const startH=7, endH=20;
+  const SLOT_H=28; // hauteur en px d'une demi-heure
+  const totalSlots=(endH-startH)*2; // nombre de demi-heures
+
+  const dayNames=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+  const weekDays=[];
+  for(let i=0;i<7;i++){const d=new Date(smWeekStart);d.setDate(d.getDate()+i);weekDays.push(d);}
+
+  // Collecter données par jour
+  const weekData={};
+  weekDays.forEach(d=>{
+    const dk=fmt(d);
+    const slots=[];
+    Object.keys(availSlots).forEach(key=>{
+      if(!key.startsWith(ci+'__'))return;
+      if(key.split('__')[2]!==dk)return;
+      const svcId=key.split('__')[1];
+      (availSlots[key]||[]).forEach(t=>slots.push({time:t,svcId:svcId}));
+    });
+    const rdvs=Object.values(allAppts).filter(a=>a.collabId===ci&&a.date===dk&&a.status!=='refused');
+    weekData[dk]={slots,rdvs};
+  });
+
+  // Convertir "HH:MM" en index de demi-heure depuis startH
+  function timeToIdx(t){
+    const[h,m]=t.split(':').map(Number);
+    return (h-startH)*2+Math.floor(m/30);
+  }
+
+  // Construire le HTML
+  let html='<div style="display:grid;grid-template-columns:48px repeat(7,1fr);gap:0;border:1px solid var(--gray-200);border-radius:10px;overflow:hidden;font-size:.72rem">';
+
+  // Header
+  html+='<div class="sm-week-hcorner">Heure</div>';
+  weekDays.forEach((d,i)=>{
+    const isToday=d.toDateString()===TODAY.toDateString();
+    html+=`<div class="sm-week-hdr${isToday?' today-col':''}">${dayNames[i]}<br><span style="font-size:.72rem;font-weight:400;opacity:.8">${d.getDate()}/${d.getMonth()+1}</span></div>`;
+  });
+
+  // Lignes horaires + colonnes jours
+  for(let h=startH;h<endH;h++){
+    // Ligne :00
+    html+=`<div class="sm-week-hour">${p2(h)}:00</div>`;
+    weekDays.forEach(d=>{
+      const dk=fmt(d);
+      const isToday=d.toDateString()===TODAY.toDateString();
+      html+=`<div class="sm-week-cell${isToday?' today-col':''}" style="height:${SLOT_H}px;border-bottom:1px solid var(--gray-200);position:relative" onclick="smWeekClickDay('${dk}')"></div>`;
+    });
+    // Ligne :30
+    html+=`<div class="sm-week-hour" style="border-bottom-style:solid;color:transparent;font-size:.5rem">30</div>`;
+    weekDays.forEach(d=>{
+      const dk=fmt(d);
+      const isToday=d.toDateString()===TODAY.toDateString();
+      html+=`<div class="sm-week-cell${isToday?' today-col':''}" style="height:${SLOT_H}px;border-bottom:1px dashed var(--gray-200);position:relative" onclick="smWeekClickDay('${dk}')"></div>`;
+    });
+  }
+  html+='</div>';
+
+  // Overlay : positionner les blocs par-dessus la grille
+  // On utilise un wrapper relatif autour de chaque colonne jour
+  // Plus simple : on reconstruit avec une structure colonne par colonne
+
+  // Approche alternative : grille avec position absolue par colonne
+  // Construire une structure overlay
+  const headerH=42; // hauteur du header approximative
+  const totalH=totalSlots*SLOT_H;
+
+  html='<div style="position:relative">';
+  // Grille de fond
+  html+='<div style="display:grid;grid-template-columns:48px repeat(7,1fr);gap:0;border:1px solid var(--gray-200);border-radius:10px;overflow:hidden;font-size:.72rem">';
+  // Header
+  html+='<div class="sm-week-hcorner">Heure</div>';
+  weekDays.forEach((d,i)=>{
+    const isToday=d.toDateString()===TODAY.toDateString();
+    html+=`<div class="sm-week-hdr${isToday?' today-col':''}" style="padding:.45rem .2rem">${dayNames[i]}<br><span style="font-size:.72rem;font-weight:400;opacity:.8">${d.getDate()}/${d.getMonth()+1}</span></div>`;
+  });
+  // Heures
+  for(let h=startH;h<endH;h++){
+    html+=`<div class="sm-week-hour" style="height:${SLOT_H*2}px;min-height:${SLOT_H*2}px">${p2(h)}:00</div>`;
+    weekDays.forEach(d=>{
+      const dk=fmt(d);
+      const isToday=d.toDateString()===TODAY.toDateString();
+      html+=`<div style="height:${SLOT_H*2}px;min-height:${SLOT_H*2}px;border-bottom:1px solid var(--gray-200);border-right:1px solid var(--gray-200);position:relative;cursor:pointer;${isToday?'background:rgba(77,179,230,.03);':''}" onclick="smWeekClickDay('${dk}')">`;
+      // Ligne demi-heure
+      html+=`<div style="position:absolute;top:${SLOT_H}px;left:0;right:0;border-top:1px dashed rgba(0,0,0,.06)"></div>`;
+      html+='</div>';
+    });
+  }
+  html+='</div>';
+
+  // Overlay blocs — positionnés absolument par-dessus
+  html+='<div style="position:absolute;top:0;left:48px;right:0;bottom:0;display:grid;grid-template-columns:repeat(7,1fr);pointer-events:none">';
+  weekDays.forEach((d,dayIdx)=>{
+    const dk=fmt(d);
+    const data=weekData[dk]||{slots:[],rdvs:[]};
+    // Fonction locale pour vérifier chevauchement de durée
+    const isSlotBooked=function(time, svcId){
+      const sv=services.find(x=>x.id===svcId);
+      const dur=sv?sv.duration:60;
+      const[sh,sm]=time.split(':').map(Number);
+      const sStart=sh*60+sm, sEnd=sStart+dur;
+      return data.rdvs.some(a=>{
+        const[ah,am]=a.time.split(':').map(Number);
+        const aStart=ah*60+am, aEnd=aStart+(a.duration||60);
+        return aStart<sEnd && aEnd>sStart;
+      });
+    };
+    const isPast=d<TODAY;
+
+    html+=`<div style="position:relative;height:100%">`;
+
+    if(!isPast){
+      // Construire la liste des blocs à afficher
+      const blocks=[];
+
+      data.slots.forEach(s=>{
+        const idx=timeToIdx(s.time);
+        if(idx<0||idx>=totalSlots)return;
+        const sv=services.find(x=>x.id===s.svcId);
+        const dur=sv?sv.duration:60;
+        const slotsSpan=Math.ceil(dur/30);
+        const isBooked=isSlotBooked(s.time, s.svcId);
+        const rdv=data.rdvs.find(a=>a.time===s.time);
+        blocks.push({idx,slotsSpan,svcId:s.svcId,sv,dur,isBooked,rdv,time:s.time,type:'slot'});
+      });
+
+      // RDV sans créneau correspondant
+      data.rdvs.forEach(a=>{
+        if(data.slots.some(s=>s.time===a.time))return;
+        const idx=timeToIdx(a.time);
+        if(idx<0||idx>=totalSlots)return;
+        const dur=a.duration||60;
+        const slotsSpan=Math.ceil(dur/30);
+        blocks.push({idx,slotsSpan,svcId:a.serviceId,sv:services.find(x=>x.id===a.serviceId),dur,isBooked:false,rdv:a,time:a.time,type:'rdvOnly'});
+      });
+
+      // Détecter les chevauchements : pour chaque bloc, trouver combien d'autres blocs
+      // occupent la même plage horaire, et attribuer une position (colonne)
+      blocks.sort((a,b)=>a.idx-b.idx||a.time.localeCompare(b.time));
+
+      // Attribuer les colonnes (algorithme de chevauchement)
+      blocks.forEach(block=>{
+        block.endIdx=block.idx+block.slotsSpan;
+        block.col=0;
+        block.totalCols=1;
+      });
+
+      // Trouver les groupes de blocs qui se chevauchent
+      for(let i=0;i<blocks.length;i++){
+        const bi=blocks[i];
+        // Chercher tous les blocs qui chevauchent bi
+        const overlapping=[bi];
+        for(let j=0;j<blocks.length;j++){
+          if(i===j)continue;
+          const bj=blocks[j];
+          // Chevauchement si les plages se croisent
+          if(bj.idx<bi.endIdx&&bj.endIdx>bi.idx){
+            overlapping.push(bj);
+          }
+        }
+        // Attribuer le nombre de colonnes max pour ce groupe
+        const maxCols=overlapping.length;
+        overlapping.forEach(b=>{
+          if(maxCols>b.totalCols)b.totalCols=maxCols;
+        });
+      }
+
+      // Attribuer les indices de colonne (éviter les conflits)
+      const usedCols={}; // idx -> Set de colonnes utilisées
+      blocks.forEach(block=>{
+        // Trouver la première colonne libre sur toute la plage du bloc
+        let col=0;
+        let found=false;
+        while(!found){
+          found=true;
+          for(let r=block.idx;r<block.endIdx;r++){
+            if(usedCols[r]&&usedCols[r].has(col)){found=false;break;}
+          }
+          if(!found)col++;
+        }
+        block.col=col;
+        // Marquer les lignes comme occupées
+        for(let r=block.idx;r<block.endIdx;r++){
+          if(!usedCols[r])usedCols[r]=new Set();
+          usedCols[r].add(col);
+        }
+      });
+
+      // Recalculer totalCols pour chaque bloc (max de colonnes dans sa plage)
+      blocks.forEach(block=>{
+        let maxCol=0;
+        for(let r=block.idx;r<block.endIdx;r++){
+          if(usedCols[r])maxCol=Math.max(maxCol,usedCols[r].size);
+        }
+        block.totalCols=maxCol;
+      });
+
+      // Dessiner les blocs
+      blocks.forEach(block=>{
+        const color=svcColor(block.svcId);
+        const top=headerH+block.idx*SLOT_H;
+        const height=block.slotsSpan*SLOT_H-2;
+        const widthPct=(100/block.totalCols);
+        const leftPct=(block.col*widthPct);
+        const label=block.sv?(block.sv.icon||'')+' '+block.sv.name:'?';
+
+        if(block.rdv){
+          const a=block.rdv;
+          const statusIcon=a.status==='pending'?'⏳':'✅';
+          const client=esc((a.clientName||'').split(' ').slice(0,2).join(' '));
+          const roomTag=a.roomName?'🚪 '+esc(a.roomName):'';
+          html+=`<div style="position:absolute;top:${top}px;left:${leftPct}%;width:${widthPct}%;height:${height}px;padding:0 2px;pointer-events:auto;z-index:2">
+            <div style="height:100%;background:${color}25;border-left:3px solid ${color};border-radius:4px;padding:2px 4px;overflow:hidden;display:flex;flex-direction:column;gap:0" title="${block.time}–${block.dur}min — ${block.sv?block.sv.name:''} — ${a.clientName} (${a.status})${a.roomName?' — '+a.roomName:''}">
+              <div style="font-size:.58rem;font-weight:700;color:${color};line-height:1.2">${statusIcon} ${block.time}</div>
+              <div style="font-size:.52rem;color:${color};font-weight:600;line-height:1.2;opacity:.9">${label}</div>
+              <div style="font-size:.52rem;color:var(--navy);font-weight:500;line-height:1.2">${client}</div>
+              ${roomTag?`<div style="font-size:.48rem;color:var(--gray-400);line-height:1.2">${roomTag}</div>`:''}
+              ${height>60?`<div style="font-size:.48rem;color:${color};opacity:.6;line-height:1.2">${block.dur}min</div>`:''}
+            </div>
+          </div>`;
+        } else if(block.isBooked){
+          html+=`<div style="position:absolute;top:${top}px;left:${leftPct}%;width:${widthPct}%;height:${height}px;padding:0 2px;pointer-events:auto;z-index:1">
+            <div style="height:100%;background:repeating-linear-gradient(135deg,#f5f5f5,#f5f5f5 4px,#eee 4px,#eee 8px);border-left:3px solid #ccc;border-radius:4px;padding:2px 4px;overflow:hidden;opacity:.6" title="${block.time} — bloqué (autre service)">
+              <div style="font-size:.55rem;color:#999;font-weight:600;line-height:1.3">🔒 ${block.time}</div>
+            </div>
+          </div>`;
+        } else {
+          html+=`<div style="position:absolute;top:${top}px;left:${leftPct}%;width:${widthPct}%;height:${height}px;padding:0 2px;pointer-events:auto;z-index:1">
+            <div style="height:100%;background:${color}12;border-left:3px solid ${color};border-radius:4px;padding:2px 4px;overflow:hidden;display:flex;flex-direction:column;gap:0" title="${block.time}–${block.dur}min — ${block.sv?block.sv.name:''} (libre)">
+              <div style="font-size:.58rem;font-weight:700;color:${color};line-height:1.2">${block.time}</div>
+              <div style="font-size:.52rem;color:${color};font-weight:500;line-height:1.2;opacity:.8">${label}</div>
+              ${height>50?`<div style="font-size:.48rem;color:${color};opacity:.6;line-height:1.2">${block.dur}min</div>`:''}
+            </div>
+          </div>`;
+        }
+      });
+    }
+
+    html+='</div>';
+  });
+  html+='</div></div>';
+
+  grid.innerHTML=html;
+}
+
+function smWeekClickDay(dk){
+  smSelDate=dk;
+  renderSmDay(dk);
+  document.getElementById('slotEd').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// Helper pour rafraîchir la vue active (mois ou semaine)
+function smRenderView(){if(smView==='week')renderSmWeek();else renderSmCal();}
+
+// Palette de couleurs distinctes pour les services
+const SVC_COLORS=['#e74c8b','#4db3e6','#9b59b6','#2ecc71','#e67e22','#3498db','#e74c3c','#1abc9c','#f39c12','#8e44ad','#16a085','#d35400'];
+function svcColor(svcId){
+  const idx=services.findIndex(s=>s.id===svcId);
+  return SVC_COLORS[idx>=0?idx%SVC_COLORS.length:0];
+}
 
 function renderSmCal(){
   const g=document.getElementById('smCalG'); if(!g)return;
@@ -983,69 +1456,235 @@ function renderSmCal(){
   const y=smCalMonth.getFullYear(),mo=smCalMonth.getMonth();
   document.getElementById('smMonthLbl').textContent=smCalMonth.toLocaleDateString('fr-FR',{month:'long',year:'numeric'});
   let fd=new Date(y,mo,1).getDay(); fd=(fd+6)%7;
-  const ci=document.getElementById('smC').value,si=document.getElementById('smS').value;
+  const ci=document.getElementById('smC').value;
+
+  // Légende couleurs sous le calendrier
+  let legendEl=document.getElementById('smColorLegend');
+  if(!legendEl){
+    legendEl=document.createElement('div');
+    legendEl.id='smColorLegend';
+    legendEl.style.cssText='display:flex;flex-wrap:wrap;gap:.5rem .9rem;margin-bottom:1.2rem;padding:.7rem .9rem;background:var(--gray-100);border-radius:10px';
+    g.parentNode.insertBefore(legendEl,g.nextSibling);
+  }
+  // Trouver quels services ont des créneaux pour ce collaborateur
+  const svcWithSlots=new Set();
+  Object.keys(availSlots).forEach(key=>{
+    if(key.startsWith(ci+'__')&&(availSlots[key]||[]).length>0) svcWithSlots.add(key.split('__')[1]);
+  });
+  // Aussi les services avec des RDV
+  Object.values(allAppts).forEach(a=>{
+    if(a.collabId===ci&&a.status!=='refused') svcWithSlots.add(a.serviceId);
+  });
+  legendEl.innerHTML='<div style="font-size:.68rem;font-weight:700;color:var(--navy);width:100%;margin-bottom:.1rem">🎨 Légende services :</div>'+
+    Array.from(svcWithSlots).map(sid=>{
+      const sv=services.find(s=>s.id===sid);
+      if(!sv)return '';
+      return `<div style="display:flex;align-items:center;gap:.3rem;font-size:.7rem;color:var(--navy)"><span style="width:10px;height:10px;border-radius:50%;background:${svcColor(sid)};display:inline-block;flex-shrink:0"></span>${sv.icon||'📋'} ${sv.name}</div>`;
+    }).join('');
+
   for(let i=0;i<fd;i++){const e=document.createElement('div');e.className='sm-day empty';g.appendChild(e);}
   for(let d=1;d<=new Date(y,mo+1,0).getDate();d++){
     const date=new Date(y,mo,d),dk=fmt(date);
-    const k=slotKey(ci,si,dk);
-    const sl=getSlots(k);
+
+    // Tous les créneaux de TOUS les services pour ce collaborateur ce jour-là
+    const daySlots=[];
+    Object.keys(availSlots).forEach(key=>{
+      if(!key.startsWith(ci+'__'))return;
+      if(key.split('__')[2]!==dk)return;
+      const svcId=key.split('__')[1];
+      (availSlots[key]||[]).forEach(t=>{
+        daySlots.push({time:t,svcId:svcId});
+      });
+    });
+
+    // RDV du jour (tous services)
+    const rdvDay=Object.values(allAppts).filter(a=>a.collabId===ci&&a.date===dk&&a.status!=='refused');
+    const pendingCount=rdvDay.filter(a=>a.status==='pending').length;
+
     const el=document.createElement('div'); el.className='sm-day';
+    el.style.cssText='aspect-ratio:auto;min-height:62px;padding:3px 2px;align-items:stretch;justify-content:flex-start;gap:1px';
     if(date<TODAY)el.classList.add('past');
     else{
-      if(sl.length>0)el.classList.add('has-s');
+      if(daySlots.length>0)el.classList.add('has-s');
       if(date.toDateString()===TODAY.toDateString())el.classList.add('today');
       if(smSelDate===dk)el.classList.add('selected');
       el.onclick=()=>{document.querySelectorAll('.sm-day').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');smSelDate=dk;renderSmDay(dk);};
     }
-    el.innerHTML=`<span>${d}</span>${sl.length>0?'<div class="sm-dot"></div>':''}`;
+
+    // Numéro du jour
+    let html=`<span style="font-weight:700;font-size:.76rem;line-height:1;margin-bottom:1px">${d}</span>`;
+
+    // Petites pastilles colorées pour chaque créneau (max 6 visibles)
+    if(daySlots.length>0&&date>=TODAY){
+      // Grouper par service pour afficher les pastilles
+      const uniqueTimes=[...new Set(daySlots.map(s=>s.time))].sort();
+      const showMax=4;
+      html+='<div style="display:flex;flex-wrap:wrap;gap:1px;justify-content:center">';
+      uniqueTimes.slice(0,showMax).forEach(t=>{
+        const slotsAtTime=daySlots.filter(s=>s.time===t);
+        const isBooked=rdvDay.some(a=>a.time===t);
+        // Couleur du premier service pour ce créneau
+        const color=svcColor(slotsAtTime[0].svcId);
+        html+=`<div style="width:6px;height:6px;border-radius:50%;background:${isBooked?'#888':color};${isBooked?'opacity:.4;':''}flex-shrink:0" title="${t}${isBooked?' (réservé)':''}"></div>`;
+      });
+      if(uniqueTimes.length>showMax) html+=`<div style="font-size:.45rem;color:var(--gray-400);line-height:1">+${uniqueTimes.length-showMax}</div>`;
+      html+='</div>';
+    }
+
+    // Indicateur RDV
+    if(rdvDay.length>0){
+      html+=`<div style="font-size:.48rem;font-weight:700;color:${pendingCount>0?'#d68910':'#27ae60'};line-height:1">${rdvDay.length} rdv</div>`;
+    }
+
+    el.innerHTML=html;
     g.appendChild(el);
   }
 }
 
 function renderSmDay(dk){
   const ci=document.getElementById('smC').value,si=document.getElementById('smS').value;
-  const k=slotKey(ci,si,dk);
-  const sl=[...getSlots(k)].sort();
   const d=new Date(dk+'T00:00:00');
   const ds=d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   document.getElementById('slotEdDate').textContent=`📅 ${ds}`;
   document.getElementById('slotEd').style.display='block';
   document.getElementById('smNoDayMsg').style.display='none';
-  const list=document.getElementById('slotList'); list.innerHTML='';
-  if(!sl.length){list.innerHTML='<span class="empty-msg">Aucun créneau défini pour ce jour</span>';}
-  else sl.forEach(t=>{
-    const tag=document.createElement('div'); tag.className='slot-tag';
-    tag.innerHTML=`${t}<button onclick="rmSlot('${k}','${t}')">✕</button>`;
-    list.appendChild(tag);
+
+  // Tous les RDV du collaborateur ce jour-là (tous services confondus)
+  const rdvDay=Object.values(allAppts).filter(a=>a.collabId===ci&&a.date===dk&&a.status!=='refused');
+
+  // Fonction locale pour vérifier si un créneau chevauche un RDV existant
+  function isTimeBooked(time, svcId){
+    const sv=services.find(s=>s.id===svcId);
+    const dur=sv?sv.duration:60;
+    const[h,m]=time.split(':').map(Number);
+    const slotStart=h*60+m;
+    const slotEnd=slotStart+dur;
+    return rdvDay.some(a=>{
+      const[ah,am]=a.time.split(':').map(Number);
+      const aStart=ah*60+am;
+      const aEnd=aStart+(a.duration||60);
+      return aStart<slotEnd && aEnd>slotStart;
+    });
+  }
+
+  // Tous les créneaux de TOUS les services pour ce collaborateur ce jour-là
+  const allSlots=[];
+  Object.keys(availSlots).forEach(key=>{
+    if(!key.startsWith(ci+'__'))return;
+    if(key.split('__')[2]!==dk)return;
+    const svcId=key.split('__')[1];
+    const svcObj=services.find(s=>s.id===svcId);
+    (availSlots[key]||[]).forEach(t=>{
+      allSlots.push({time:t,svcId:svcId,svcName:svcObj?(svcObj.icon||'📋')+' '+svcObj.name:'?',key:key});
+    });
   });
+  allSlots.sort((a,b)=>a.time>b.time?1:a.time<b.time?-1:0);
+
+  const list=document.getElementById('slotList'); list.innerHTML='';
+
+  // ── Bloc RDV réservés
+  if(rdvDay.length>0){
+    const sumDiv=document.createElement('div');
+    sumDiv.style.cssText='width:100%;margin-bottom:.8rem;padding:.65rem .9rem;background:linear-gradient(135deg,#fff8e1,#fff3cd);border-radius:10px;border-left:4px solid #f0a500;font-size:.78rem;color:var(--navy)';
+    let sumHTML='<div style="font-weight:700;margin-bottom:.4rem;font-size:.74rem">📋 RDV réservés ce jour :</div>';
+    rdvDay.sort((a,b)=>a.time>b.time?1:-1).forEach(a=>{
+      const color=svcColor(a.serviceId);
+      const badge=a.status==='pending'?'⏳ En attente':'✅ Accepté';
+      const badgeColor=a.status==='pending'?'#d68910':'#27ae60';
+      sumHTML+=`<div style="display:flex;gap:.5rem;align-items:center;padding:.25rem 0;flex-wrap:wrap">
+        <span style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0"></span>
+        <strong>${esc(a.time)}</strong>
+        <span style="color:${color};font-weight:600">${esc(a.service)}</span>
+        <span style="color:var(--gray-400)">—</span> ${esc(a.clientName)}
+        <span style="font-size:.68rem;color:${badgeColor};font-weight:600">${badge}</span>
+      </div>`;
+    });
+    sumDiv.innerHTML=sumHTML;
+    list.appendChild(sumDiv);
+  }
+
+  // ── Créneaux de TOUS les services, groupés par service
+  if(allSlots.length>0){
+    // Grouper par service
+    const grouped={};
+    allSlots.forEach(s=>{
+      if(!grouped[s.svcId])grouped[s.svcId]={name:s.svcName,color:svcColor(s.svcId),slots:[],key:s.key};
+      grouped[s.svcId].slots.push(s.time);
+    });
+
+    Object.entries(grouped).forEach(([svcId,data])=>{
+      const isSelected=(svcId===si);
+      const slotKey_=slotKey(ci,svcId,dk);
+      const block=document.createElement('div');
+      block.style.cssText='width:100%;margin-bottom:.7rem;padding:.6rem .8rem;border-radius:10px;border:1px solid '+(isSelected?data.color:'var(--gray-200)')+';background:'+(isSelected?data.color+'0d':'var(--gray-100)');
+
+      let html=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;flex-wrap:wrap;gap:.3rem">
+        <div style="display:flex;align-items:center;gap:.4rem">
+          <span style="width:10px;height:10px;border-radius:50%;background:${data.color};flex-shrink:0"></span>
+          <span style="font-weight:700;font-size:.78rem;color:var(--navy)">${data.name}</span>
+          ${isSelected?'<span style="font-size:.62rem;background:'+data.color+';color:white;padding:.1rem .45rem;border-radius:10px;font-weight:600">sélectionné</span>':''}
+        </div>
+        <button onclick="if(confirm('Vider tous les créneaux de ce service pour ce jour ?')){rmAllSlots('${slotKey_}')}" style="background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.2);color:var(--error);padding:.18rem .5rem;border-radius:6px;font-size:.65rem;cursor:pointer;font-family:DM Sans,sans-serif">🗑 Vider</button>
+      </div>`;
+      html+='<div style="display:flex;flex-wrap:wrap;gap:.35rem">';
+      data.slots.sort().forEach(t=>{
+        const rdv=rdvDay.find(a=>a.time===t);
+        const isBooked=isTimeBooked(t, svcId);
+        if(isBooked){
+          const rdvInfo=rdv?(rdv.status==='pending'?'⏳':'✅')+' '+esc(rdv.clientName):'réservé (autre service)';
+          html+=`<div style="display:inline-flex;align-items:center;gap:.25rem;padding:.22rem .55rem;border-radius:16px;font-size:.74rem;font-weight:500;background:#f0f0f0;color:#999;text-decoration:line-through" title="${rdvInfo}">${t}</div>`;
+        } else {
+          // Créneau libre — toujours supprimable avec ✕
+          html+=`<div style="display:inline-flex;align-items:center;gap:.25rem;padding:.22rem .55rem;border-radius:16px;font-size:.74rem;font-weight:600;background:${data.color}${isSelected?'':'18'};color:${isSelected?'white':data.color};${isSelected?'':'border:1px solid '+data.color+'40;'}">${t}<span onclick="rmSlot('${slotKey_}','${t}')" style="cursor:pointer;opacity:.7;margin-left:2px;font-size:.7rem" title="Supprimer ce créneau">✕</span></div>`;
+        }
+      });
+      html+='</div>';
+      block.innerHTML=html;
+      list.appendChild(block);
+    });
+  }
+
+  // ── Si aucun créneau nulle part
+  if(allSlots.length===0&&rdvDay.length===0){
+    list.innerHTML='<span class="empty-msg">Aucun créneau défini pour ce jour</span>';
+  }
 }
 
 function addSlot(){
   const ci=document.getElementById('smC').value,si=document.getElementById('smS').value;
-  if(!smSelDate||!ci||!si)return;
+  if(!ci){showNotif('Sélectionnez un collaborateur','error');return;}
+  if(!si){showNotif('Sélectionnez un service pour ajouter un créneau','error');return;}
+  if(!smSelDate)return;
   const t=document.getElementById('newTime').value; if(!t)return;
   const k=slotKey(ci,si,smSelDate);
   const sl=[...new Set([...getSlots(k),t])].sort();
   saveSlots(k,sl); availSlots[k]=sl;
-  renderSmDay(smSelDate); renderSmCal(); showNotif(`✓ Créneau ${t} ajouté`,'success');
+  renderSmDay(smSelDate); smRenderView(); showNotif(`✓ Créneau ${t} ajouté`,'success');
 }
 
 function rmSlot(k,t){
   const sl=getSlots(k).filter(x=>x!==t);
   saveSlots(k,sl); availSlots[k]=sl;
-  renderSmDay(smSelDate); renderSmCal(); showNotif(`Créneau ${t} supprimé`,'success');
+  renderSmDay(smSelDate); smRenderView(); showNotif(`Créneau ${t} supprimé`,'success');
+}
+
+function rmAllSlots(k){
+  saveSlots(k,[]); availSlots[k]=[];
+  renderSmDay(smSelDate); smRenderView(); showNotif('Créneaux supprimés','success');
 }
 
 function clearDay(){
-  if(!confirm('Supprimer tous les créneaux de ce jour ?'))return;
+  if(!document.getElementById('smS').value){showNotif('Sélectionnez un service pour supprimer ses créneaux','error');return;}
+  if(!confirm('Supprimer tous les créneaux du service sélectionné pour ce jour ?'))return;
   const ci=document.getElementById('smC').value,si=document.getElementById('smS').value;
   const k=slotKey(ci,si,smSelDate);
   saveSlots(k,[]); availSlots[k]=[];
-  renderSmDay(smSelDate); renderSmCal(); showNotif('Créneaux supprimés','success');
+  renderSmDay(smSelDate); smRenderView(); showNotif('Créneaux supprimés','success');
 }
 
 function openRange(){
   if(!smSelDate)return;
+  if(!document.getElementById('smS').value){showNotif('Sélectionnez un service pour générer des créneaux','error');return;}
   const svc=services.find(s=>s.id===document.getElementById('smS').value);
   const dur=svc?.duration||60;
   openModal(`<div style="background:white;border-radius:16px;padding:2rem;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.25);animation:slideUp .2s ease">
@@ -1074,7 +1713,7 @@ function applyRange(dur){
   while(cur+dur<=end){ns.push(`${p2(Math.floor(cur/60))}:${p2(cur%60)}`);cur+=dur+pause;}
   const merged=[...new Set([...getSlots(k),...ns])].sort();
   saveSlots(k,merged); availSlots[k]=merged;
-  closeModal(); renderSmDay(smSelDate); renderSmCal();
+  closeModal(); renderSmDay(smSelDate); smRenderView();
   showNotif(`✓ ${ns.length} créneau${ns.length>1?'x':''} générés`,'success');
 }
 
@@ -1082,7 +1721,7 @@ function applyRange(dur){
 //  ADMIN — CALENDAR + LIST
 // ══════════════════════════════════════════════════════
 function aTab(n){
-  const ns=['slots','pending','calendar','list','settings'];
+  const ns=['slots','pending','rooms','calendar','list','settings'];
   document.querySelectorAll('.admin-tab').forEach((t,i)=>{t.classList.remove('active');if(ns[i]===n)t.classList.add('active');});
   document.querySelectorAll('.atc').forEach(c=>c.classList.remove('active'));
   document.getElementById(`at${n.charAt(0).toUpperCase()+n.slice(1)}`).classList.add('active');
@@ -1091,6 +1730,7 @@ function aTab(n){
   if(n==='list')renderList();
   if(n==='pending')renderPending();
   if(n==='calendar')renderACal();
+  if(n==='rooms')renderRoomsPlannings();
 }
 
 function aChMonth(d){aCalMonth.setMonth(aCalMonth.getMonth()+d);renderACal();}
@@ -1128,8 +1768,8 @@ function renderList(){
   list.innerHTML='';
   appts.forEach(a=>{
     const d=document.createElement('div'); d.className='appt-item';
-    d.innerHTML=`<div style="flex:1;min-width:180px"><div class="appt-client">${esc(a.clientName)}${a.clientPhone?' · '+esc(a.clientPhone):''}</div><div class="appt-det">📅 ${a.dateStr||a.date} à ${esc(a.time)} · ⏱ ${a.duration}min · 👤 ${esc(a.collabName)} · ${esc(a.service)}</div>${a.clientEmail?`<div class="appt-det">✉️ ${esc(a.clientEmail)}</div>`:''}</div>
-    <div style="display:flex;align-items:center;gap:.4rem;flex-wrap:wrap"><span class="appt-badge badge-${a.mode==='presentiel'?'p':'d'}">${a.mode==='presentiel'?'🏢':'💻'} ${esc(a.mode)}</span>
+    d.innerHTML=`<div style="flex:1;min-width:180px"><div class="appt-client">${esc(a.clientName)}${a.clientPhone?' · '+esc(a.clientPhone):''}</div><div class="appt-det">📅 ${a.dateStr||a.date} à ${esc(a.time)} · ⏱ ${a.duration}min · 👤 ${esc(a.collabName)} · ${esc(a.service)}${a.roomName?' · 🚪 '+esc(a.roomName):''}</div>${a.clientEmail?`<div class="appt-det">✉️ ${esc(a.clientEmail)}</div>`:''}</div>
+    <div style="display:flex;align-items:center;gap:.4rem;flex-wrap:wrap"><span class="appt-badge badge-${modeInfo(a.mode).badge}">${modeInfo(a.mode).icon} ${esc(a.mode)}</span>
       ${a.status==='pending'?'<span class="badge-pending">⏳ En attente</span>':a.status==='refused'?'<span class="badge-refused">❌ Refusé</span>':'<span class="badge-accepted">✅ Accepté</span>'}
       <button class="btn-del" onclick="doDelAppt('${a.id}')">🗑</button></div>`;
     list.appendChild(d);
@@ -1178,7 +1818,7 @@ function renderPending(){
           <div style="font-size:.85rem">📋 <strong>${esc(a.service)}</strong></div>
           <div style="font-size:.85rem">👤 <strong>${esc(a.collabName)}</strong></div>
           <div style="font-size:.85rem">📅 ${ds} à <strong>${esc(a.time)}</strong> (${a.duration}min)</div>
-          <div style="font-size:.85rem">${a.mode==='presentiel'?'🏢 Présentiel – Zaventem':'💻 Distanciel'}</div>
+          <div style="font-size:.85rem">${modeInfo(a.mode).icon} ${modeInfo(a.mode).label}${a.mode==='presentiel'?' – Zaventem':''}</div>
           ${a.clientEmail?`<div style="font-size:.83rem;margin-top:.2rem">✉️ ${esc(a.clientEmail)}${a.clientPhone?' · 📞 '+esc(a.clientPhone):''}</div>`:''}
           ${a.clientMessage?`<div style="font-size:.82rem;font-style:italic;margin-top:.3rem;padding:.4rem .6rem;background:var(--gray-100);border-radius:7px;color:var(--navy-deep)">"${esc(a.clientMessage)}"</div>`:''}
         </div>
@@ -1197,7 +1837,7 @@ function acceptAppt(id){
   if(!a)return;
   const d=new Date(a.date+'T00:00:00');
   const ds=a.dateStr||d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  const modeLabel=a.mode==='presentiel'?'🏢 Présentiel – Leuvensesteenweg 555, 1930 Zaventem':'💻 Distanciel – lien transmis par le collaborateur';
+  const modeLabel=modeInfo(a.mode).icon+' '+modeInfo(a.mode).label+(a.mode==='presentiel'?' – Leuvensesteenweg 555, 1930 Zaventem':'');
 
   openModal(`<div style="background:white;border-radius:16px;padding:2rem;max-width:500px;width:100%;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.28);animation:slideUp .2s ease">
 
@@ -1229,6 +1869,31 @@ function acceptAppt(id){
     <div style="margin-bottom:1.2rem">
       <label style="display:block;font-size:.73rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.35rem">Note personnalisée (optionnel)</label>
       <textarea id="acceptNote" placeholder="Ex: Merci de vous munir de vos derniers documents comptables..." style="width:100%;padding:.68rem 1rem;border:2px solid var(--gray-200);border-radius:10px;font-family:DM Sans,sans-serif;font-size:.86rem;color:var(--navy);resize:vertical;min-height:68px;transition:border-color .2s" onfocus="this.style.borderColor='var(--sky)'" onblur="this.style.borderColor='var(--gray-200)'"></textarea>
+    </div>
+
+    <!-- Sélection salle -->
+    <div style="margin-bottom:1.2rem">
+      <label style="display:block;font-size:.73rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem">🚪 Attribuer une salle</label>
+      <div id="roomPickerWrap" style="display:flex;flex-direction:column;gap:.35rem">
+        ${(function(){
+          const avail=getAvailableRooms(a.date,a.time,a.duration,a.serviceId,id);
+          if(!rooms.length) return '<div style="font-size:.82rem;color:var(--gray-400)">Aucune salle configurée — allez dans Paramètres</div>';
+          return rooms.map((r,i)=>{
+            const free=avail.some(ar=>ar.id===r.id);
+            const svcRestricted=(r.allowedServices||[]).length>0&&a.serviceId&&!r.allowedServices.includes(a.serviceId);
+            const col=ROOM_COLORS[i%ROOM_COLORS.length];
+            const reason=svcRestricted?'✗ Non autorisée pour ce service':(!free?'✗ Occupée à ce créneau':'✓ Disponible');
+            const reasonCol=free?'#27ae60':'var(--error)';
+            return '<label style="display:flex;align-items:center;gap:.7rem;padding:.6rem .9rem;border:2px solid '+(free?'var(--gray-200)':'rgba(231,76,60,.3)')+';border-radius:10px;cursor:'+(free?'pointer':'not-allowed')+';opacity:'+(free?'1':'.45')+'">'
+              +'<input type="radio" name="roomChoice" value="'+r.id+'" '+(free?'':'disabled')+' style="accent-color:'+col+';width:16px;height:16px">'
+              +'<div style="width:28px;height:28px;border-radius:6px;background:'+col+';color:white;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0">🚪</div>'
+              +'<div><div style="font-weight:600;font-size:.86rem;color:var(--navy)">'+esc(r.name)+'</div>'
+              +(r.desc?'<div style="font-size:.72rem;color:var(--gray-400)">'+esc(r.desc)+'</div>':'')
+              +'<div style="font-size:.68rem;font-weight:600;color:'+reasonCol+'">'+reason+'</div>'
+              +'</div></label>';
+          }).join('');
+        })()}
+      </div>
     </div>
 
     <!-- Choix envoi -->
@@ -1263,10 +1928,17 @@ function doAcceptAppt(id){
 
   var choice = (document.querySelector('input[name="sendChoice"]:checked') || {}).value || 'send_client';
   var note   = ((document.getElementById('acceptNote') || {}).value || '').trim();
+  var roomEl = document.querySelector('input[name="roomChoice"]:checked');
+  var roomId = roomEl ? roomEl.value : '';
 
   // ── Sauvegarde Firebase avec update() atomique sur le bon chemin
   var updates = { status: 'accepted' };
   if(note) updates.adminNote = note;
+  if(roomId){
+    updates.roomId = roomId;
+    var rm = rooms.find(function(r){return r.id===roomId;});
+    if(rm) updates.roomName = rm.name;
+  }
 
   var apptRef = window._fbRef(window._db, 'appointments/' + id);
   window._fbUpdate(apptRef, updates)
@@ -1356,7 +2028,7 @@ function updStats(){
 //  ADMIN — SETTINGS
 // ══════════════════════════════════════════════════════
 function renderSetAll(){
-  renderSetSvcs(); renderSetCollabs();
+  renderSetSvcs(); renderSetCollabs(); renderSetRooms();
   const ei=document.getElementById('ejsSvc');
   if(ei){
     ei.value=emailCfg.serviceId||'';
@@ -1411,9 +2083,10 @@ function openSvcModal(idx){
         <input type="number" id="m-dur-c" placeholder="Ex: 50" min="5" style="width:100%;padding:.68rem 1rem;border:2px solid var(--gray-200);border-radius:9px;font-family:DM Sans,sans-serif;font-size:.86rem" oninput="if(this.value)document.getElementById('m-dur').value=this.value"></div>
     </div>
     <div style="margin-bottom:.9rem"><label style="display:block;font-size:.72rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.45rem">Modes disponibles</label>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
-        <label style="display:flex;align-items:center;gap:.5rem;padding:.65rem .8rem;border:2px solid ${s.modes?.includes('presentiel')?'var(--sky)':'var(--gray-200)'};border-radius:9px;cursor:pointer"><input type="checkbox" id="m-pres" ${s.modes?.includes('presentiel')?'checked':''} style="accent-color:var(--sky)"> 🏢 <span><strong style="font-size:.85rem">Présentiel</strong><br><small style="color:var(--gray-400)">Zaventem</small></span></label>
-        <label style="display:flex;align-items:center;gap:.5rem;padding:.65rem .8rem;border:2px solid ${s.modes?.includes('distanciel')?'var(--sky)':'var(--gray-200)'};border-radius:9px;cursor:pointer"><input type="checkbox" id="m-dist" ${s.modes?.includes('distanciel')?'checked':''} style="accent-color:var(--sky)"> 💻 <span><strong style="font-size:.85rem">Distanciel</strong><br><small style="color:var(--gray-400)">Teams/Zoom</small></span></label>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem">
+        <label style="display:flex;align-items:center;gap:.5rem;padding:.65rem .6rem;border:2px solid ${s.modes?.includes('presentiel')?'var(--sky)':'var(--gray-200)'};border-radius:9px;cursor:pointer"><input type="checkbox" id="m-pres" ${s.modes?.includes('presentiel')?'checked':''} style="accent-color:var(--sky)"> 🏢 <span><strong style="font-size:.8rem">Présentiel</strong></span></label>
+        <label style="display:flex;align-items:center;gap:.5rem;padding:.65rem .6rem;border:2px solid ${s.modes?.includes('distanciel')?'var(--sky)':'var(--gray-200)'};border-radius:9px;cursor:pointer"><input type="checkbox" id="m-dist" ${s.modes?.includes('distanciel')?'checked':''} style="accent-color:var(--sky)"> 💻 <span><strong style="font-size:.8rem">Distanciel</strong></span></label>
+        <label style="display:flex;align-items:center;gap:.5rem;padding:.65rem .6rem;border:2px solid ${s.modes?.includes('telephonique')?'var(--sky)':'var(--gray-200)'};border-radius:9px;cursor:pointer"><input type="checkbox" id="m-tel" ${s.modes?.includes('telephonique')?'checked':''} style="accent-color:var(--sky)"> 📞 <span><strong style="font-size:.8rem">Téléphonique</strong></span></label>
       </div></div>
     <div style="margin-bottom:1.2rem"><label style="display:block;font-size:.72rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.45rem">Collaborateurs assignés</label>
       <div style="display:flex;flex-direction:column;gap:.3rem">${co}</div></div>
@@ -1433,7 +2106,7 @@ function setIcon(ic){document.getElementById('m-icon').value=ic;}
 
 function saveSvc(idx,id){
   const n=document.getElementById('m-name').value.trim(); if(!n)return;
-  const modes=[]; if(document.getElementById('m-pres').checked)modes.push('presentiel'); if(document.getElementById('m-dist').checked)modes.push('distanciel');
+  const modes=[]; if(document.getElementById('m-pres').checked)modes.push('presentiel'); if(document.getElementById('m-dist').checked)modes.push('distanciel'); if(document.getElementById('m-tel').checked)modes.push('telephonique');
   const sc=Array.from(document.querySelectorAll('#tmpModal input[type=checkbox][value]')).filter(c=>c.checked).map(c=>c.value);
   const customDur=parseInt(document.getElementById('m-dur-c').value);
   const selectDur=parseInt(document.getElementById('m-dur').value);
@@ -1483,6 +2156,203 @@ function saveCl(idx,id){
 }
 function delCl(i){if(confirm('Supprimer ?')){collabs.splice(i,1);saveCfg();renderSetCollabs();}}
 
+// ══════════════════════════════════════════════════════
+//  ADMIN — SALLES
+// ══════════════════════════════════════════════════════
+const ROOM_COLORS=['#e74c3c','#2ecc71','#3498db','#f39c12','#9b59b6','#1abc9c'];
+function roomColor(idx){return ROOM_COLORS[idx%ROOM_COLORS.length];}
+
+function renderSetRooms(){
+  const el=document.getElementById('setRooms'); if(!el)return;
+  if(!rooms.length){el.innerHTML='<p style="color:var(--gray-400);font-size:.82rem;padding:.7rem;background:var(--gray-100);border-radius:8px;text-align:center">Aucune salle configurée.</p>';return;}
+  el.innerHTML='';
+  rooms.forEach((r,i)=>{
+    const row=document.createElement('div'); row.className='cl-row';
+    row.innerHTML=`<div style="display:flex;align-items:center;gap:.7rem">
+      <div style="width:36px;height:36px;border-radius:8px;background:${roomColor(i)};color:white;font-size:.9rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">🚪</div>
+      <div><div style="font-weight:600;color:var(--navy)">${esc(r.name)}</div>${r.desc?'<div style="font-size:.73rem;color:var(--gray-400)">'+esc(r.desc)+'</div>':''}${(r.allowedServices||[]).length?'<div style="font-size:.68rem;color:var(--sky);margin-top:.15rem">Réservée : '+r.allowedServices.map(sid=>{const sv=services.find(s=>s.id===sid);return sv?(sv.icon||'')+' '+sv.name:'?';}).join(', ')+'</div>':'<div style="font-size:.68rem;color:var(--gray-400);margin-top:.15rem">Tous services</div>'}</div>
+    </div>
+    <div style="display:flex;gap:.3rem"><button class="btn-sm btn-edit" onclick="openRoomModal(${i})">✏️</button><button class="btn-sm" style="background:rgba(231,76,60,.1);color:var(--error)" onclick="delRoom(${i})">🗑</button></div>`;
+    el.appendChild(row);
+  });
+}
+
+function openRoomModal(idx){
+  const r=idx!==undefined?rooms[idx]:{id:'r'+Date.now(),name:'',desc:'',allowedServices:[]};
+  const svcOpts=services.length?services.map(s=>`<label style="display:flex;align-items:center;gap:.4rem;padding:.3rem .5rem;border:1px solid var(--gray-200);border-radius:7px;cursor:pointer;font-size:.8rem"><input type="checkbox" value="${s.id}" ${(r.allowedServices||[]).includes(s.id)?'checked':''}> ${s.icon||'📋'} ${s.name}</label>`).join(''):'';
+  openModal(`<div style="background:white;border-radius:16px;padding:1.8rem;max-width:460px;width:100%;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.25);animation:slideUp .2s ease">
+    <h3 style="font-family:Cormorant Garamond,serif;font-size:1.4rem;color:var(--navy);margin-bottom:1.2rem">${idx!==undefined?'✏️ Modifier':'➕ Ajouter'} une salle</h3>
+    <div style="margin-bottom:.9rem"><label style="display:block;font-size:.72rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.3rem">Nom de la salle *</label>
+      <input type="text" id="rm-n" value="${esc(r.name)}" placeholder="Ex: Grande salle" style="width:100%;padding:.68rem 1rem;border:2px solid var(--gray-200);border-radius:9px;font-family:DM Sans,sans-serif;font-size:.9rem"></div>
+    <div style="margin-bottom:.9rem"><label style="display:block;font-size:.72rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.3rem">Description (optionnel)</label>
+      <input type="text" id="rm-d" value="${esc(r.desc||'')}" placeholder="Ex: 4 places, écran TV, étage 2..." style="width:100%;padding:.68rem 1rem;border:2px solid var(--gray-200);border-radius:9px;font-family:DM Sans,sans-serif;font-size:.86rem"></div>
+    <div style="margin-bottom:1.3rem"><label style="display:block;font-size:.72rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem">Services autorisés <small style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--gray-400)">(vide = tous)</small></label>
+      <div style="font-size:.75rem;color:var(--gray-400);margin-bottom:.5rem">Si vous cochez des services, seuls ceux-ci pourront utiliser cette salle</div>
+      <div id="rmSvcList" style="display:flex;flex-direction:column;gap:.3rem">${svcOpts}</div></div>
+    <div style="display:flex;gap:.7rem">
+      <button class="btn-next" style="flex:1" onclick="saveRoom(${idx!==undefined?idx:'undefined'},'${r.id}')">💾 Enregistrer</button>
+      <button class="btn-back" onclick="closeModal()">Annuler</button>
+    </div>
+  </div>`);
+}
+
+function saveRoom(idx,id){
+  const n=document.getElementById('rm-n').value.trim(); if(!n)return;
+  const allowedSvcs=Array.from(document.querySelectorAll('#rmSvcList input[type=checkbox]:checked')).map(c=>c.value);
+  const rm={id:id||'r'+Date.now(),name:n,desc:document.getElementById('rm-d').value.trim(),allowedServices:allowedSvcs};
+  if(idx!==undefined&&idx!=='undefined')rooms[idx]=rm; else rooms.push(rm);
+  saveCfg(); closeModal(); renderSetRooms(); showNotif('✓ Salle enregistrée','success');
+}
+function delRoom(i){if(confirm('Supprimer cette salle ?')){rooms.splice(i,1);saveCfg();renderSetRooms();}}
+
+// ══════════════════════════════════════════════════════
+//  ADMIN — VUE SALLES (3 mini-plannings)
+// ══════════════════════════════════════════════════════
+let roomsWeekStart=null;
+
+function roomsNav(dir){
+  if(!roomsWeekStart){const now=new Date();const day=(now.getDay()+6)%7;roomsWeekStart=new Date(now.getFullYear(),now.getMonth(),now.getDate()-day);}
+  roomsWeekStart=new Date(roomsWeekStart.getFullYear(),roomsWeekStart.getMonth(),roomsWeekStart.getDate()+dir*7);
+  renderRoomsPlannings();
+}
+
+function renderRoomsPlannings(){
+  if(!roomsWeekStart){const now=new Date();const day=(now.getDay()+6)%7;roomsWeekStart=new Date(now.getFullYear(),now.getMonth(),now.getDate()-day);}
+  const lbl=document.getElementById('roomsWeekLbl');
+  const end=new Date(roomsWeekStart); end.setDate(end.getDate()+6);
+  lbl.textContent=roomsWeekStart.toLocaleDateString('fr-FR',{day:'numeric',month:'short'})+' — '+end.toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'});
+
+  const wrap=document.getElementById('roomsGridWrap');
+  if(!rooms.length){wrap.innerHTML='<div style="text-align:center;padding:2rem;color:var(--gray-400);grid-column:1/-1"><div style="font-size:2rem;margin-bottom:.5rem">🚪</div>Aucune salle configurée — allez dans ⚙️ Services & Équipe</div>';return;}
+
+  wrap.innerHTML='';
+  rooms.forEach((room,ri)=>{
+    const card=document.createElement('div');
+    card.style.cssText='background:white;border:1px solid var(--gray-200);border-radius:14px;overflow:hidden';
+
+    const startH=7,endH=20,SLOT_H=22;
+    const dayNames=['L','M','M','J','V','S','D'];
+    const weekDays=[];
+    for(let i=0;i<7;i++){const d=new Date(roomsWeekStart);d.setDate(d.getDate()+i);weekDays.push(d);}
+
+    // RDV dans cette salle cette semaine
+    const roomAppts=Object.values(allAppts).filter(a=>a.roomId===room.id&&a.status!=='refused');
+
+    // Header card
+    const col=ROOM_COLORS[ri%ROOM_COLORS.length];
+    let html=`<div style="background:${col};color:white;padding:.7rem .9rem;display:flex;align-items:center;gap:.5rem">
+      <span style="font-size:1.1rem">🚪</span>
+      <div><div style="font-weight:700;font-size:.9rem">${esc(room.name)}</div>${room.desc?'<div style="font-size:.68rem;opacity:.8">'+esc(room.desc)+'</div>':''}${(room.allowedServices||[]).length?'<div style="font-size:.62rem;opacity:.7;margin-top:.1rem">Réservée : '+room.allowedServices.map(sid=>{const sv=services.find(s=>s.id===sid);return sv?sv.name:'?';}).join(', ')+'</div>':''}</div>
+    </div>`;
+
+    // Mini grille semaine
+    html+='<div style="padding:.4rem;overflow-x:auto"><div style="display:grid;grid-template-columns:32px repeat(7,1fr);gap:0;font-size:.62rem;min-width:280px">';
+    // Header jours
+    html+='<div></div>';
+    weekDays.forEach((d,i)=>{
+      const isToday=d.toDateString()===TODAY.toDateString();
+      html+=`<div style="text-align:center;font-weight:700;padding:.3rem .1rem;${isToday?'color:'+col+';':'color:var(--navy);'}">${dayNames[i]}<br><span style="font-weight:400;font-size:.55rem">${d.getDate()}</span></div>`;
+    });
+
+    // Lignes horaires
+    for(let h=startH;h<endH;h++){
+      html+=`<div style="text-align:right;padding-right:4px;color:var(--gray-400);font-size:.55rem;height:${SLOT_H}px;display:flex;align-items:flex-start;justify-content:flex-end;border-right:1px solid var(--gray-200)">${p2(h)}</div>`;
+      weekDays.forEach(d=>{
+        const dk=fmt(d);
+        const isToday=d.toDateString()===TODAY.toDateString();
+        // Trouver les RDV qui occupent cette heure dans cette salle
+        const cellRdvs=roomAppts.filter(a=>{
+          if(a.date!==dk)return false;
+          const[ah,am]=(a.time||'').split(':').map(Number);
+          const aStart=ah*60+am;
+          const aEnd=aStart+(a.duration||60);
+          const cellStart=h*60;
+          const cellEnd=cellStart+60;
+          return aStart<cellEnd&&aEnd>cellStart;
+        });
+
+        let cellStyle=`height:${SLOT_H}px;border-bottom:1px solid var(--gray-100);border-right:1px solid var(--gray-100);position:relative;`;
+        if(isToday)cellStyle+='background:rgba(77,179,230,.03);';
+
+        if(cellRdvs.length>0){
+          const a=cellRdvs[0];
+          const sColor=svcColor(a.serviceId);
+          const statusIcon=a.status==='pending'?'⏳':'✅';
+          // Vérifier si c'est le début du bloc (première heure)
+          const[ah]=a.time.split(':').map(Number);
+          const isStart=(ah===h);
+          cellStyle+=`background:${sColor}20;`;
+          const content=isStart?`<div style="font-size:.5rem;font-weight:700;color:${sColor};line-height:1.1;padding:1px 2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis" title="${a.time} — ${a.service} — ${a.clientName}">${statusIcon}${a.time}</div>`:'';
+          html+=`<div style="${cellStyle}">${content}</div>`;
+        } else {
+          // Libre — fond vert très léger
+          html+=`<div style="${cellStyle}background:rgba(46,204,113,.04);"></div>`;
+        }
+      });
+    }
+    html+='</div></div>';
+
+    // Compteur
+    const weekRdvs=roomAppts.filter(a=>{
+      const ad=new Date(a.date+'T00:00:00');
+      return ad>=roomsWeekStart&&ad<=end;
+    });
+    html+=`<div style="padding:.5rem .9rem;border-top:1px solid var(--gray-100);font-size:.72rem;color:var(--gray-400);display:flex;justify-content:space-between">
+      <span>${weekRdvs.length} RDV cette semaine</span>
+      <span style="color:${col};font-weight:600">${weekRdvs.filter(a=>a.status==='pending').length} en attente</span>
+    </div>`;
+
+    card.innerHTML=html;
+    wrap.appendChild(card);
+  });
+}
+
+// Vérifier quelles salles sont libres à une date/heure/durée donnée
+// excludeApptId : exclure ce RDV du calcul (celui qu'on est en train d'accepter)
+function getAvailableRooms(date,time,duration,serviceId,excludeApptId){
+  const[h,m]=time.split(':').map(Number);
+  const startMin=h*60+m;
+  const endMin=startMin+(duration||60);
+
+  // Tous les RDV (non refusés) qui chevauchent ce créneau, SAUF celui qu'on accepte
+  const overlapping=Object.entries(allAppts).filter(([apptId,a])=>{
+    if(excludeApptId && apptId===excludeApptId) return false;
+    if(a.date!==date || a.status==='refused') return false;
+    const[ah,am]=a.time.split(':').map(Number);
+    const aStart=ah*60+am;
+    const aEnd=aStart+(a.duration||60);
+    return aStart<endMin && aEnd>startMin;
+  }).map(([,a])=>a);
+
+  // Simuler l'attribution des salles (même logique que isRoomAvailableForSlot)
+  const roomBusy=new Set();
+
+  // D'abord les RDV avec salle déjà attribuée
+  overlapping.filter(a=>a.roomId).forEach(a=>{
+    roomBusy.add(a.roomId);
+  });
+
+  // Ensuite les pending sans salle → réservation virtuelle
+  overlapping.filter(a=>!a.roomId).forEach(a=>{
+    const rdvCompatible=rooms.filter(r=>{
+      if(roomBusy.has(r.id)) return false;
+      if((r.allowedServices||[]).length===0) return true;
+      return r.allowedServices.includes(a.serviceId);
+    });
+    if(rdvCompatible.length>0){
+      roomBusy.add(rdvCompatible[0].id);
+    }
+  });
+
+  return rooms.filter(r=>{
+    if(roomBusy.has(r.id)) return false;
+    if((r.allowedServices||[]).length>0 && serviceId){
+      if(!r.allowedServices.includes(serviceId)) return false;
+    }
+    return true;
+  });
+}
+
 
 
 // ══════════════════════════════════════════════════════
@@ -1501,6 +2371,11 @@ function closeModal(){document.getElementById('tmpModal')?.remove();}
 function fmt(d){return `${d.getFullYear()}-${p2(d.getMonth()+1)}-${p2(d.getDate())}`;}
 function p2(n){return String(n).padStart(2,'0');}
 function esc(s){const d=document.createElement('div');d.textContent=s||'';return d.innerHTML;}
+function modeInfo(m){
+  if(m==='presentiel')return{icon:'🏢',label:'Présentiel',desc:'Leuvensesteenweg 555, 1930 Zaventem',badge:'p'};
+  if(m==='telephonique')return{icon:'📞',label:'Téléphonique',desc:'Appel téléphonique',badge:'t'};
+  return{icon:'💻',label:'Distanciel',desc:'Réunion en ligne (Teams / Zoom)',badge:'d'};
+}
 function showNotif(m,t='success'){const el=document.getElementById('notif');el.textContent=m;el.className=`notif ${t}`;el.style.display='block';setTimeout(()=>el.style.display='none',3500);}
 
 
@@ -1538,7 +2413,8 @@ function openOutlookEvent(a, note, includeClient, includeCollab){
 
   // ── Lieu
   var location = a.mode === 'presentiel'
-    ? 'Leuvensesteenweg 555, 1930 Zaventem'
+    ? 'Leuvensesteenweg 555, 1930 Zaventem' + (a.roomName ? ' — ' + a.roomName : '')
+    : a.mode === 'telephonique' ? 'Appel telephonique'
     : 'Reunion en ligne (Teams / Zoom)';
 
   // ── Corps HTML (Outlook Web supporte le HTML dans le body)
@@ -1551,8 +2427,9 @@ function openOutlookEvent(a, note, includeClient, includeCollab){
     '<tr><td style="padding:5px 16px 5px 0;color:#888;vertical-align:top">Date</td><td style="padding:5px 0"><b>' + (a.dateStr||a.date) + '</b></td></tr>',
     '<tr><td style="padding:5px 16px 5px 0;color:#888;vertical-align:top">Heure</td><td style="padding:5px 0"><b>' + a.time + '</b></td></tr>',
     '<tr><td style="padding:5px 16px 5px 0;color:#888;vertical-align:top">Dur&eacute;e</td><td style="padding:5px 0">' + a.duration + ' min</td></tr>',
-    '<tr><td style="padding:5px 16px 5px 0;color:#888;vertical-align:top">Mode</td><td style="padding:5px 0">' + (a.mode==='presentiel' ? 'Pr&eacute;sentiel &mdash; Leuvensesteenweg 555, 1930 Zaventem' : 'Distanciel &mdash; lien transmis par le collaborateur') + '</td></tr>',
+    '<tr><td style="padding:5px 16px 5px 0;color:#888;vertical-align:top">Mode</td><td style="padding:5px 0">' + (a.mode==='presentiel' ? 'Pr&eacute;sentiel &mdash; Leuvensesteenweg 555, 1930 Zaventem' : a.mode==='telephonique' ? 'T&eacute;l&eacute;phonique' : 'Distanciel &mdash; lien transmis par le collaborateur') + '</td></tr>',
     a.clientPhone ? '<tr><td style="padding:5px 16px 5px 0;color:#888;vertical-align:top">T&eacute;l.</td><td style="padding:5px 0">' + a.clientPhone + '</td></tr>' : null,
+    a.roomName ? '<tr><td style="padding:5px 16px 5px 0;color:#888;vertical-align:top">Salle</td><td style="padding:5px 0"><b>' + a.roomName + '</b></td></tr>' : null,
     '</table>'
   ];
 
